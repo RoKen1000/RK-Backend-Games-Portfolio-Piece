@@ -7,6 +7,6 @@ exports.selectAllCategories = (request, response, next) => {
         return response.status(200).send(categories)
     })
     .catch((err) => {
-        return err
+        next(err)
     })
 }

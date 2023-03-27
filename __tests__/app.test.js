@@ -7,7 +7,7 @@ const connection = require('../db/connection')
 beforeEach(() => seed(testData));
 
 describe("GET /api/categories", () => {
-  it("200: Endpoint retrieves an array of all four objects in the categories table each with a slug and a description property", () => {
+  it("200: Endpoint retrieves an array of all four objects in the categories table with each object having a slug and a description property", () => {
     return request(app)
     .get("/api/categories")
     .expect(200)
@@ -19,6 +19,14 @@ describe("GET /api/categories", () => {
             expect(category).toHaveProperty("slug"),
             expect(category).toHaveProperty("description")
         });
+    })
+  })
+  it("404: When endpoint is mispelled, a 'not found' error is sent", () => {
+    return request(app)
+    .get("/api/*")
+    .expect(404)
+    .then((response) => {
+        expect(response.body).toEqual({msg: "404: not found. Endpoint does not exist."})
     })
   })  
 })
