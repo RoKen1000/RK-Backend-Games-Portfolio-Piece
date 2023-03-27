@@ -32,7 +32,7 @@ describe("GET /api/categories", () => {
 })
 
 describe("GET /api/reviews/:review_id", () => {
-    it("200: Endpoint can retrieve a review object based on the query sent to the endpoint and each object must have the following properties: review_id, title, review_body, designer, review_img_url, votes, category, owner, created_at", () => {
+    it("200: Endpoint can retrieve a review object based on the parameter sent to the endpoint and each object must have the following properties: review_id, title, review_body, designer, review_img_url, votes, category, owner, created_at", () => {
           return request(app)
           .get("/api/reviews/5")
           .expect(200)
@@ -48,6 +48,15 @@ describe("GET /api/reviews/:review_id", () => {
                 expect(review.review).toHaveProperty("category")
                 expect(review.review).toHaveProperty("owner")
                 expect(review.review).toHaveProperty("created_at")
+        })
+    })
+    it("404: When given a parameter that does not exist in the table, a not found error message is returned", () => {
+        return request(app)
+        .get("/api/reviews/14")
+        .expect(404)
+        .then((response) => {
+            const errorMessage = response.body
+            expect(errorMessage).toEqual({msg: "404: not found. Review does not exist."})
         })
     })
 })
