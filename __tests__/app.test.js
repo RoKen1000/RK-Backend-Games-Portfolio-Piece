@@ -13,7 +13,6 @@ describe("GET /api/categories", () => {
     .expect(200)
     .then((response) => {
         const retrievedCategoriesObject = response.body
-        expect(retrievedCategoriesObject).toHaveProperty("categories")
         expect(retrievedCategoriesObject.categories.length).toBe(4);
         expect(retrievedCategoriesObject.categories).toBeInstanceOf(Array);
         retrievedCategoriesObject.categories.forEach((category) => {
