@@ -59,6 +59,15 @@ describe("GET /api/reviews/:review_id", () => {
             expect(errorMessage).toEqual({msg: "404: not found. Review does not exist."})
         })
     })
+    it("400: When given a parameter that is the wrong format a bad request error is sent", () => {
+        return request(app)
+        .get("/api/reviews/homer")
+        .expect(400)
+        .then((response) => {
+            const errorMessage = response.body
+            expect(errorMessage).toEqual(({msg: "400: bad request. Invalid Format. Request must be an integer."}))
+        })
+    })
 })
 
 afterAll(() => connection.end())
