@@ -11,11 +11,12 @@ describe("GET /api/categories", () => {
     return request(app)
     .get("/api/categories")
     .expect(200)
-    .then(({body}) => {
-        const categories = body.rows;
-        expect(categories.length).toBe(4);
-        expect(categories).toBeInstanceOf(Array);
-        categories.forEach((category) => {
+    .then((response) => {
+        const retrievedCategoriesObject = response.body
+        expect(retrievedCategoriesObject).toHaveProperty("categories")
+        expect(retrievedCategoriesObject.categories.length).toBe(4);
+        expect(retrievedCategoriesObject.categories).toBeInstanceOf(Array);
+        retrievedCategoriesObject.categories.forEach((category) => {
             expect(category).toHaveProperty("slug"),
             expect(category).toHaveProperty("description")
         });
