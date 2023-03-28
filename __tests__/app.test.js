@@ -26,7 +26,7 @@ describe("GET /api/categories", () => {
     .get("/api/*")
     .expect(404)
     .then((response) => {
-        expect(response.body).toEqual({msg: "404: not found. Endpoint does not exist."})
+        expect(response.body).toEqual({status: "404", msg: "Not found."})
     })
   })  
 })
@@ -52,11 +52,11 @@ describe("GET /api/reviews/:review_id", () => {
     })
     it("404: When given a parameter that does not exist in the table, a not found error message is returned", () => {
         return request(app)
-        .get("/api/reviews/14")
+        .get("/api/reviews/9999")
         .expect(404)
         .then((response) => {
             const errorMessage = response.body
-            expect(errorMessage).toEqual({msg: "404: not found. Review does not exist."})
+            expect(errorMessage).toEqual({status: "404", msg: "Not found."})
         })
     })
     it("400: When given a parameter that is the wrong format a bad request error is sent", () => {
@@ -65,7 +65,7 @@ describe("GET /api/reviews/:review_id", () => {
         .expect(400)
         .then((response) => {
             const errorMessage = response.body
-            expect(errorMessage).toEqual(({msg: "400: bad request. Invalid Format. Request must be an integer."}))
+            expect(errorMessage).toEqual(({status: "400", msg: "Bad request."}))
         })
     })
 })
