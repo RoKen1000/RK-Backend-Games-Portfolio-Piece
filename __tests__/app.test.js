@@ -26,9 +26,49 @@ describe("GET /api/categories", () => {
     .get("/api/*")
     .expect(404)
     .then((response) => {
-        expect(response.body).toEqual({msg: "404: not found. Endpoint does not exist."})
+        expect(response.body).toEqual({status: "404", msg: "Not found."})
     })
   })  
+})
+
+describe("GET /api/reviews/:review_id", () => {
+    it("200: Endpoint can retrieve a review object based on the parameter sent to the endpoint and each object must have the following properties: review_id, title, review_body, designer, review_img_url, votes, category, owner, created_at", () => {
+          return request(app)
+          .get("/api/reviews/5")
+          .expect(200)
+          .then((response) => {
+                const review = response.body
+                expect(review.review).toBeInstanceOf(Object)
+                expect(review.review).toHaveProperty("review_id")
+                expect(review.review.review_id).toBe(5)
+                expect(review.review).toHaveProperty("title")
+                expect(review.review).toHaveProperty("review_body")
+                expect(review.review).toHaveProperty("designer")
+                expect(review.review).toHaveProperty("review_img_url")
+                expect(review.review).toHaveProperty("votes")
+                expect(review.review).toHaveProperty("category")
+                expect(review.review).toHaveProperty("owner")
+                expect(review.review).toHaveProperty("created_at")
+        })
+    })
+    it("404: When given a parameter that does not exist in the table, a not found error message is returned", () => {
+        return request(app)
+        .get("/api/reviews/9999")
+        .expect(404)
+        .then((response) => {
+            const errorMessage = response.body
+            expect(errorMessage).toEqual({status: "404", msg: "Not found."})
+        })
+    })
+    it("400: When given a parameter that is the wrong format a bad request error is sent", () => {
+        return request(app)
+        .get("/api/reviews/homer")
+        .expect(400)
+        .then((response) => {
+            const errorMessage = response.body
+            expect(errorMessage).toEqual(({status: "400", msg: "Bad request."}))
+        })
+    })
 })
 
 afterAll(() => connection.end())
