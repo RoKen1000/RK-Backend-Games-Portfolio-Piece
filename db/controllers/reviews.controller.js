@@ -1,5 +1,5 @@
 const app = require("../app")
-const {fetchReview} = require("../models/reviews.model")
+const {fetchReview, fetchAllReviews} = require("../models/reviews.model")
 
 exports.selectReview = (request, response, next) => {
     const requestQuery = request.params.review_id;

@@ -40,6 +40,7 @@ describe("GET /api/reviews/:review_id", () => {
                 const review = response.body
                 expect(review.review).toBeInstanceOf(Object)
                 expect(review.review).toHaveProperty("review_id")
+                expect(review.review.review_id).toBe(5)
                 expect(review.review).toHaveProperty("title")
                 expect(review.review).toHaveProperty("review_body")
                 expect(review.review).toHaveProperty("designer")
