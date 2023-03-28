@@ -72,7 +72,7 @@ describe("GET /api/reviews/:review_id", () => {
 })
 
 describe("GET /api/reviews", () => {
-    it.only("200: Endpoint responds with an object with a review property which has an array of review objects as its value. Each of the objects should have an owner, title, review_id, category, review_img_url, created_at, votes, designer and comment_count properties. The value for the comment_count property should reflect how many comments each review has. The review objects should be sorted in descending order.", () => {
+    it("200: Endpoint responds with an object with a review property which has an array of review objects as its value. Each of the objects should have an owner, title, review_id, category, review_img_url, created_at, votes, designer and comment_count properties. The value for the comment_count property should reflect how many comments each review has. The review objects should be sorted in descending order.", () => {
         return request(app)
         .get("/api/reviews")
         .expect(200)
@@ -92,6 +92,14 @@ describe("GET /api/reviews", () => {
             })
             expect(retrievedReviewsObject.reviews).toBeSorted()
             expect(retrievedReviewsObject.reviews).toBeSortedBy("created_at", {descending: true, coerce: true})
+        })
+    })
+    it("404: When endpoint is mispelled, a 'not found' error is sent", () => {
+        return request(app)
+        .get("/api/*")
+        .expect(404)
+        .then((response) => {
+            expect(response.body).toEqual({status: "404", msg: "Not found."})
         })
     })
 })
