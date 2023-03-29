@@ -8,7 +8,7 @@ const app = express();
 
 app.get("/api/categories", selectAllCategories);
 app.get("/api/reviews/:review_id", selectReview);
-app.get("/api/reviews/:review_id/comments", retrieveComments)
+// app.get("/api/reviews/:review_id/comments", retrieveComments)
 app.all("/api/*", malformedEndpoint)
 
 // app.use(malformedEndpoint);

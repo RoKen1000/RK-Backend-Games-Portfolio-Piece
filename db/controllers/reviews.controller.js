@@ -12,8 +12,8 @@ exports.selectReview = (request, response, next) => {
     })
 }
 
-exports.retrieveComments = (request, response, next) => {
-    const reviewId = request.params.review_id
-    fetchComments(reviewId)
-    
-}
+// exports.retrieveComments = (request, response, next) => {
+//     const reviewId = request.params.review_id
+//     fetchComments(reviewId)
+
+// }
