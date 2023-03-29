@@ -18,9 +18,21 @@ exports.fetchAllReviews = () => {
     })
 }
 
-// exports.fetchComments = (reviewIdentifier) => {
-//     return db.query('SELECT * FROM comments JOIN reviews ON comments.review_id = review.review_id ORDER BY comments.created_at DESC;')
-//     .then((comments) => {
-//         return {comments: comments.rows}
-//     })
-// }
+const checkReviewExists = async (reviewIdentifier) => {
+        const dbOutput = await db.query('SELECT * FROM reviews WHERE review_id = $1;', [reviewIdentifier])
+
+        
+        if (dbOutput.rows.length === 0){
+            return Promise.reject({status: "404", msg: "Not found."})
+        }else console.log(dbOutput.rows)
+    }
+
+exports.fetchComments = async (reviewIdentifier) => {
+    return db.query('SELECT comments.comment_id, comments.votes, comments.created_at, comments.author, comments.body, comments.review_id FROM comments WHERE review_id = $1 ORDER BY comments.created_at DESC;', [reviewIdentifier])
+    .then( async (comments) => {
+        if(comments.rows.length === 0){
+            await checkReviewExists(reviewIdentifier)
+        }
+        return comments.rows
+    })
+}

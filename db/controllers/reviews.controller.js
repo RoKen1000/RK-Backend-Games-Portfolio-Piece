@@ -1,5 +1,5 @@
 const app = require("../app")
-const {fetchReview, fetchAllReviews, fetchComments} = require("../models/reviews.model")
+const {fetchReview, fetchAllReviews, fetchComments, checkReviewExists} = require("../models/reviews.model")
 
 exports.selectReview = (request, response, next) => {
     const requestQuery = request.params.review_id;
@@ -19,8 +19,15 @@ exports.selectAllReviews = (request, response, next) => {
     })
 }
 
-// exports.retrieveComments = (request, response, next) => {
-//     const reviewId = request.params.review_id
-//     fetchComments(reviewId)
-
-// }
+exports.retrieveComments = (request, response, next) => {
+    const reviewId = request.params.review_id
+    
+    fetchComments(reviewId)
+    .then((comments) => {
+        return response.set(200).send({comments})
+    })
+    .catch((err) => {
+        console.log(err)
+        next(err)
+    })
+}
