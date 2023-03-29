@@ -11,3 +11,10 @@ exports.selectReview = (request, response, next) => {
         next(err)
     })
 }
+
+exports.selectAllReviews = (request, response, next) => {
+    fetchAllReviews()
+    .then((reviews) => {
+        return response.set(200).send({reviews})
+    })
+}
