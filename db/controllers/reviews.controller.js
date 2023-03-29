@@ -12,6 +12,13 @@ exports.selectReview = (request, response, next) => {
     })
 }
 
+exports.selectAllReviews = (request, response, next) => {
+    fetchAllReviews()
+    .then((reviews) => {
+        return response.set(200).send({reviews})
+    })
+}
+
 // exports.retrieveComments = (request, response, next) => {
 //     const reviewId = request.params.review_id
 //     fetchComments(reviewId)
