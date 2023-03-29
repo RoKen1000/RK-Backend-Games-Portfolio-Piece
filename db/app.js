@@ -11,8 +11,6 @@ app.get("/api/reviews/:review_id", selectReview);
 app.get("/api/reviews", selectAllReviews);
 app.all("/api/*", malformedEndpoint)
 
-// app.use(malformedEndpoint);
-
 app.use(notFound);
 app.use(badRequest);
 app.use(internalServerError);
