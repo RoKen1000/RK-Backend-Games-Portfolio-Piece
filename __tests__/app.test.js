@@ -3,6 +3,7 @@ const app = require('../db/app')
 const seed = require('../db/seeds/seed')
 const testData = require('../db/data/test-data/index')
 const connection = require('../db/connection')
+const { response } = require('../db/app')
 
 beforeEach(() => seed(testData));
 
@@ -72,7 +73,7 @@ describe("GET /api/reviews/:review_id", () => {
 })
 
 describe("GET /api/reviews", () => {
-    it("200: Endpoint responds with an object with a review property which has an array of review objects as its value. Each of the objects should have an owner, title, review_id, category, review_img_url, created_at, votes, designer and comment_count properties. The value for the comment_count property should reflect how many comments each review has. The review objects should be sorted in descending order.", () => {
+    it("200: Endpoint responds with an object with a review property which has an array of review objects as its value. Each value should have the required properties. The value for the comment_count property should reflect how many comments each review has. The review objects should be sorted in descending order.", () => {
         return request(app)
         .get("/api/reviews")
         .expect(200)
@@ -92,6 +93,57 @@ describe("GET /api/reviews", () => {
             })
             expect(retrievedReviewsObject.reviews).toBeSorted()
             expect(retrievedReviewsObject.reviews).toBeSortedBy("created_at", {descending: true, coerce: true})
+        })
+    })
+})
+
+describe("GET /api/reviews/:review_id/comments", () => {
+    it("200: Endpoint responds with an array of comments for the given review with the required properties. The comments should be ordered descending starting from the most recent comment.", () => {
+        return request(app)
+        .get("/api/reviews/2/comments")
+        .expect(200)
+        .then((response) => {
+            const retrievedCommentsObject = response.body
+            expect(retrievedCommentsObject.comments.length).toBe(3)
+            const {comments} = retrievedCommentsObject
+            comments.forEach((comment) => {
+                expect(comment).toHaveProperty("comment_id")
+                expect(comment).toHaveProperty("votes")
+                expect(comment).toHaveProperty("created_at")
+                expect(comment).toHaveProperty("author")
+                expect(comment).toHaveProperty("body")
+                expect(comment).toHaveProperty("review_id")
+                expect(comment.review_id).toBe(2)
+            })
+            expect(retrievedCommentsObject.comments).toBeSorted()
+            expect(retrievedCommentsObject.comments).toBeSortedBy("created_at", {descending: true, coerce: true})
+        })
+    })
+    it("200: Endpoint responds with an empty array if no comments are found for the review", () => {
+        return request(app)
+        .get("/api/reviews/10/comments")
+        .expect(200)
+        .then((response) => {
+            const retrievedCommentsObject = response.body
+            expect(retrievedCommentsObject.comments.length).toBe(0)
+        })
+    })
+    it("404: Returns not found if review does not exist", () => {
+        return request(app)
+        .get("/api/reviews/9999/comments")
+        .expect(404)
+        .then((response) => {
+            const errorMessage = response.body
+            expect(errorMessage).toEqual({status: "404", msg: "Not found."})
+        })
+    })
+    it("400: Returns a bad request error if an invalidly formatted request is sent", () => {
+        return request(app)
+        .get("/api/reviews/homer/comments")
+        .expect(400)
+        .then((response) => {
+            const errorMessage = response.body
+            expect(errorMessage).toEqual({status: "400", msg: "Bad request."})
         })
     })
 })
