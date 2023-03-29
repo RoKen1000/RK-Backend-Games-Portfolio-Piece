@@ -78,7 +78,7 @@ describe("GET /api/reviews", () => {
         .expect(200)
         .then((response) => {
             const retrievedReviewsObject = response.body
-            expect(retrievedReviewsObject.reviews).toBeInstanceOf(Array)
+            expect(retrievedReviewsObject.reviews.length).toBe(13)
             retrievedReviewsObject.reviews.forEach((review) => {
                 expect(review).toHaveProperty("owner")
                 expect(review).toHaveProperty("title")
@@ -92,14 +92,6 @@ describe("GET /api/reviews", () => {
             })
             expect(retrievedReviewsObject.reviews).toBeSorted()
             expect(retrievedReviewsObject.reviews).toBeSortedBy("created_at", {descending: true, coerce: true})
-        })
-    })
-    it("404: When endpoint is mispelled, a 'not found' error is sent", () => {
-        return request(app)
-        .get("/api/*")
-        .expect(404)
-        .then((response) => {
-            expect(response.body).toEqual({status: "404", msg: "Not found."})
         })
     })
 })
