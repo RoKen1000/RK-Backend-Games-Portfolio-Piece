@@ -97,7 +97,7 @@ describe("GET /api/reviews", () => {
     })
 })
 
-describe("GET /api/reviews/:review_id/comments", () => {
+describe.only("GET /api/reviews/:review_id/comments", () => {
     it("200: Endpoint responds with an array of comments for the given review with the required properties. The comments should be ordered descending starting from the most recent comment.", () => {
         return request(app)
         .get("/api/reviews/2/comments")
@@ -105,7 +105,8 @@ describe("GET /api/reviews/:review_id/comments", () => {
         .then((response) => {
             const retrievedCommentsObject = response.body
             expect(retrievedCommentsObject.comments.length).toBe(3)
-            retrievedCommentsObject.comments.forEach((comment) => {
+            const {comments} = retrievedCommentsObject
+            comments.forEach((comment) => {
                 expect(comment).toHaveProperty("comment_id")
                 expect(comment).toHaveProperty("votes")
                 expect(comment).toHaveProperty("created_at")

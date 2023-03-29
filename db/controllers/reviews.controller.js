@@ -21,10 +21,10 @@ exports.selectAllReviews = (request, response, next) => {
 
 exports.retrieveComments = (request, response, next) => {
     const reviewId = request.params.review_id
-    
-    fetchComments(reviewId)
+    return Promise.all([checkReviewExists, fetchComments(reviewId)])
     .then((comments) => {
-        return response.set(200).send({comments})
+        const returnedComments = comments[1]
+        return response.set(200).send({comments: returnedComments})
     })
     .catch((err) => {
         next(err)

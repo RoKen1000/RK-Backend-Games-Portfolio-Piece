@@ -20,7 +20,6 @@ exports.fetchAllReviews = () => {
 
 const checkReviewExists = async (reviewIdentifier) => {
         const dbOutput = await db.query('SELECT * FROM reviews WHERE review_id = $1;', [reviewIdentifier])
-
         
         if (dbOutput.rows.length === 0){
             return Promise.reject({status: "404", msg: "Not found."})
