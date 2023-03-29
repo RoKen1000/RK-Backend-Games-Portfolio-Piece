@@ -71,4 +71,28 @@ describe("GET /api/reviews/:review_id", () => {
     })
 })
 
+describe("GET /api/reviews/:review_id/comments", () => {
+    it.only("200: Endpoint responds with an array of comments for the given review. Each of the comments should have a comment_id, votes, created_at, author, body and review_id property. The comments should be ordered descending starting from the most recent comment.", () => {
+        return request(app)
+        .get("/api/reviews/2/comments")
+        .expect(200)
+        .then((response) => {
+            const retrievedCommentsObject = response.body
+            expect(retrievedCommentsObject.comments).toBeInstanceOf(Array)
+            expect(retrievedCommentsObject.comments.length).toBe(3)
+            retrievedCommentsObject.comments.forEach((comment) => {
+                expect(comment).toHaveProperty("comment_id")
+                expect(comment).toHaveProperty("votes")
+                expect(comment).toHaveProperty("created_at")
+                expect(comment).toHaveProperty("author")
+                expect(comment).toHaveProperty("body")
+                expect(comment).toHaveProperty("review_id")
+                expect(comment.review_id).toBe(2)
+            })
+            expect(retrievedCommentsObject.comments).toBeSorted()
+            expect(retrievedCommentsObject.comments).toBeSortedBy("created_at", {descending: true, coerce: true})
+        })
+    })
+})
+
 afterAll(() => connection.end())

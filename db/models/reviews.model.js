@@ -9,3 +9,10 @@ exports.fetchReview = (requestQuery) => {
         return {review: review.rows[0]};
     })
 }
+
+exports.fetchComments = (reviewIdentifier) => {
+    return db.query('SELECT * FROM comments JOIN reviews ON comments.review_id = review.review_id ORDER BY comments.created_at DESC;')
+    .then((comments) => {
+        return {comments: comments.rows}
+    })
+}
