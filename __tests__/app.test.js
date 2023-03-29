@@ -97,7 +97,7 @@ describe("GET /api/reviews", () => {
     })
 })
 
-describe.only("GET /api/reviews/:review_id/comments", () => {
+describe("GET /api/reviews/:review_id/comments", () => {
     it("200: Endpoint responds with an array of comments for the given review with the required properties. The comments should be ordered descending starting from the most recent comment.", () => {
         return request(app)
         .get("/api/reviews/2/comments")
