@@ -24,7 +24,7 @@ const checkReviewExists = async (reviewIdentifier) => {
         
         if (dbOutput.rows.length === 0){
             return Promise.reject({status: "404", msg: "Not found."})
-        }else console.log(dbOutput.rows)
+        }
     }
 
 exports.fetchComments = async (reviewIdentifier) => {

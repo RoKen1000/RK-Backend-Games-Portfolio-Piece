@@ -27,7 +27,6 @@ exports.retrieveComments = (request, response, next) => {
         return response.set(200).send({comments})
     })
     .catch((err) => {
-        console.log(err)
         next(err)
     })
 }
