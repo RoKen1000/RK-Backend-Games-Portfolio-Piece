@@ -148,4 +148,34 @@ describe("GET /api/reviews/:review_id/comments", () => {
     })
 })
 
+describe("POST /api/reviews/:review_id/comments", () => {
+    it("201: The endpoint can accept an object to post a comment to the system which is returned back to the client on success", () => {
+        const newComment = {username: "bainesface", body: "I am a comment to fulfill the post request."}
+        return request(app)
+        .post("/api/reviews/10/comments")
+        .send(newComment)
+        .expect(201)
+        .then((response) => {
+            const returnedComment = response.body.comment
+            expect(returnedComment).toHaveProperty("comment_id")
+            expect(returnedComment).toHaveProperty("body")
+            expect(returnedComment).toHaveProperty("review_id")
+            expect(returnedComment.review_id).toBe(10)
+            expect(returnedComment).toHaveProperty("votes")
+            expect(returnedComment).toHaveProperty("created_at")
+        })
+    })
+    it("404: Endpoint returns not found when a user tries to post a comment on a review that does not exist", () => {
+        const newComment = {username: "bainesface", body: "I am a comment to fulfill the post request."}
+        return request(app)
+        .post("/api/reviews/9999/comments")
+        .send(newComment)
+        .expect(404)
+        .then((response) => {
+            const errorMessage = response.body
+            expect(errorMessage).toEqual({status: "404", msg: "Not found."})
+        })
+    })
+})
+
 afterAll(() => connection.end())
