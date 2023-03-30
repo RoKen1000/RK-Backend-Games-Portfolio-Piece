@@ -13,9 +13,13 @@ exports.selectReview = (request, response, next) => {
 }
 
 exports.selectAllReviews = (request, response, next) => {
-    fetchAllReviews()
+    const query = request.query
+    fetchAllReviews(query)
     .then((reviews) => {
         return response.status(200).send({reviews})
+    })
+    .catch((err) => {
+        next(err)
     })
 }
 
