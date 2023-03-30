@@ -36,9 +36,7 @@ exports.sendComment = (request, response, next) => {
     const comment = request.body
     return Promise.all([checkReviewExists(reviewId), postComment(reviewId, comment)])
     .then((returnedComment) => {
-       
         const newComment = returnedComment[1][0]
-        
         return response.status(201).send({comment: newComment})
     })
     .catch((err) => {
