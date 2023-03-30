@@ -148,4 +148,81 @@ describe("GET /api/reviews/:review_id/comments", () => {
     })
 })
 
+describe("POST /api/reviews/:review_id/comments", () => {
+    it("201: The endpoint can accept an object to post a comment to the system which is returned back to the client on success", () => {
+        const newComment = {username: "bainesface", body: "I am a comment to fulfill the post request."}
+        return request(app)
+        .post("/api/reviews/10/comments")
+        .send(newComment)
+        .expect(201)
+        .then((response) => {
+            const returnedComment = response.body.comment
+            expect(returnedComment).toHaveProperty("comment_id")
+            expect(returnedComment).toHaveProperty("body")
+            expect(returnedComment.body).toBe(newComment.body)
+            expect(returnedComment).toHaveProperty("review_id")
+            expect(returnedComment.review_id).toBe(10)
+            expect(returnedComment).toHaveProperty("votes")
+            expect(returnedComment).toHaveProperty("created_at")
+            expect(returnedComment).toHaveProperty("author")
+            expect(returnedComment.author).toBe(newComment.username)
+        })
+    })
+    it("201: when passed an object that has additional unnecessary properties, the sytem ignores it when creating the comment", () => {
+        const newComment = {username: "bainesface", body: "I am a comment to fulfill the post request.", propertyToBeIgnored: "unnessary info"}
+        return request(app)
+        .post("/api/reviews/10/comments")
+        .send(newComment)
+        .expect(201)
+        .then((response) => {
+            const returnedComment = response.body.comment
+            expect(returnedComment).not.toHaveProperty("propertyToBeIgnored")
+        })
+    })
+    it("404: Endpoint returns not found when a user tries to post a comment on a review that does not exist", () => {
+        const newComment = {username: "bainesface", body: "I am a comment to fulfill the post request."}
+        return request(app)
+        .post("/api/reviews/9999/comments")
+        .send(newComment)
+        .expect(404)
+        .then((response) => {
+            const errorMessage = response.body
+            expect(errorMessage).toEqual({status: "404", msg: "Not found."})
+        })
+    })
+    it("400: When a comment is passed to an invalid path, a bad request error is returned", () => {
+        const newComment = {username: "bainesface", body: "I am a comment to fulfill the post request."}
+        return request(app)
+        .post("/api/reviews/not-an-id/comments")
+        .send(newComment)
+        .expect(400)
+        .then((response) => {
+            const errorMessage = response.body
+            expect(errorMessage).toEqual({status: "400", msg: "Bad request."})
+        })
+    })
+    it("400: When passed a comment object that is missing a required property, a bad request error is returned", () => {
+        const newComment = {username: "bainesface"}
+        return request(app)
+        .post("/api/reviews/10/comments")
+        .send(newComment)
+        .expect(400)
+        .then((response) => {
+            const errorMessage = response.body
+            expect(errorMessage).toEqual({status: "400", msg: "Bad request."})
+        })
+    })
+    it("404: When a comment is attempted to be posted by an invalid username, a bad request error is sent", () => {
+        const newComment = {username: "homer", body: "I am a comment to fulfill the post request."}
+        return request(app)
+        .post("/api/reviews/10/comments")
+        .send(newComment)
+        .expect(404)
+        .then((response) => {
+            const errorMessage = response.body
+            expect(errorMessage).toEqual({status: "404", msg: "Not found."})
+        })
+    })
+})
+
 afterAll(() => connection.end())
