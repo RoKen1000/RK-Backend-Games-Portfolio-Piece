@@ -20,22 +20,29 @@ exports.fetchAllReviews = () => {
 
 exports.checkReviewExists = async (reviewIdentifier) => {
         const dbOutput = await db.query('SELECT * FROM reviews WHERE review_id = $1;', [reviewIdentifier])
-
+        
         if (dbOutput.rows.length === 0){
             return Promise.reject({status: "404", msg: "Not found."})
         }
     }
 
-exports.fetchComments = async (reviewIdentifier) => {
+exports.fetchComments = (reviewIdentifier) => {
     return db.query('SELECT comments.comment_id, comments.votes, comments.created_at, comments.author, comments.body, comments.review_id FROM comments WHERE review_id = $1 ORDER BY comments.created_at DESC;', [reviewIdentifier])
-    .then( async (comments) => {
+    .then((comments) => {
         return comments.rows
     })
 }
 
-exports.postComment = async (reviewIdentifier, commentToBePosted) => {
+exports.postComment = (reviewIdentifier, commentToBePosted) => {
     return db.query('INSERT INTO comments (author, body, review_id) VALUES ($1, $2, $3) RETURNING *;', [commentToBePosted.username, commentToBePosted.body, reviewIdentifier])
     .then((comment) => {
         return comment.rows;
+    })
+}
+
+exports.patchVotes = (reviewIdentifier, votes) => {
+    return db.query('UPDATE reviews SET votes = votes + $1 WHERE review_id = $2 RETURNING *;', [votes, reviewIdentifier])
+    .then((returnedReview) => {
+        return returnedReview.rows
     })
 }

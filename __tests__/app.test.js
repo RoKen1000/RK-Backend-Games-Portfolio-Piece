@@ -225,4 +225,84 @@ describe("POST /api/reviews/:review_id/comments", () => {
     })
 })
 
+describe("PATCH /api/reviews/:review_id", () => {
+    it("200: Path accepts a vote increment object and responds with the updated review containing the updated vote count", () => {
+        const newVoteObject = {inc_votes: 1}
+        return request(app)
+        .patch("/api/reviews/1")
+        .send(newVoteObject)
+        .expect(200)
+        .then((response) => {
+            const returnedReview = response.body.updatedReview
+            expect(returnedReview).toHaveProperty("review_id")
+            expect(returnedReview).toHaveProperty("title")
+            expect(returnedReview).toHaveProperty("category")
+            expect(returnedReview).toHaveProperty("designer")
+            expect(returnedReview).toHaveProperty("owner")
+            expect(returnedReview).toHaveProperty("review_body")
+            expect(returnedReview).toHaveProperty("review_img_url")
+            expect(returnedReview).toHaveProperty("created_at")
+            expect(returnedReview).toHaveProperty("votes")
+            expect(returnedReview.votes).toBe(2)
+        })
+    })
+    it("200: Endpoint can be passed an object with unnecessary additional properties and can ignore them when updating the review", () => {
+        const newVoteObject = {propertyToBeIgnored: 500, inc_votes: 1}
+        return request(app)
+        .patch("/api/reviews/1")
+        .send(newVoteObject)
+        .expect(200)
+        .then((response) => {
+            const returnedReview = response.body.updatedReview
+            expect(returnedReview).not.toHaveProperty("propertyToBeIgnored")
+            expect(returnedReview.votes).toBe(2)
+            expect(returnedReview.votes).not.toBe(501)
+        })
+    })
+    it("404: Endpoint returns not found when a user tries to vote on a review that does not exist", () => {
+        const newVoteObject = {propertyToBeIgnored: 500, inc_votes: 1}
+        return request(app)
+        .patch("/api/reviews/9999")
+        .send(newVoteObject)
+        .expect(404)
+        .then((response) => {
+            const errorMessage = response.body
+            expect(errorMessage).toEqual({status: "404", msg: "Not found."})
+        })
+    })
+    it("400: voteObject sent must contain an inc_votes property otherwise a bad request error is sent", () => {
+        const newVoteObject = {propertyToBeIgnored: 500}
+        return request(app)
+        .patch("/api/reviews/1")
+        .send(newVoteObject)
+        .expect(400)
+        .then((response) => {
+            const errorMessage = response.body
+            expect(errorMessage).toEqual({status: "400", msg: "Bad request."})
+        })
+    })
+    it("400: the inc_votes property value must be a number otherwise a bad request error is sent", () => {
+        const newVoteObject = {inc_votes: "homer"}
+        return request(app)
+        .patch("/api/reviews/1")
+        .send(newVoteObject)
+        .expect(400)
+        .then((response) => {
+            const errorMessage = response.body
+            expect(errorMessage).toEqual({status: "400", msg: "Bad request."})
+        })
+    })
+    it("400: Endpoint returns a bad request error if votes are attempted to be incremented on an invalidly formatted endpoint", () => {
+        const newVoteObject = {inc_votes: 2}
+        return request(app)
+        .patch("/api/reviews/homer")
+        .send(newVoteObject)
+        .expect(400)
+        .then((response) => {
+            const errorMessage = response.body
+            expect(errorMessage).toEqual({status: "400", msg: "Bad request."})
+        })
+    })
+})
+
 afterAll(() => connection.end())
