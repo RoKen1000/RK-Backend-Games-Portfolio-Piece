@@ -212,15 +212,15 @@ describe("POST /api/reviews/:review_id/comments", () => {
             expect(errorMessage).toEqual({status: "400", msg: "Bad request."})
         })
     })
-    it("400: When a comment is attempted to be posted by an invalid username, a bad request error is sent", () => {
+    it("404: When a comment is attempted to be posted by an invalid username, a bad request error is sent", () => {
         const newComment = {username: "homer", body: "I am a comment to fulfill the post request."}
         return request(app)
         .post("/api/reviews/10/comments")
         .send(newComment)
-        .expect(400)
+        .expect(404)
         .then((response) => {
             const errorMessage = response.body
-            expect(errorMessage).toEqual({status: "400", msg: "Bad request."})
+            expect(errorMessage).toEqual({status: "404", msg: "Not found."})
         })
     })
 })

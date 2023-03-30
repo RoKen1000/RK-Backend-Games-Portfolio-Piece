@@ -25,7 +25,7 @@ exports.cannotBeNull = (err, request, response, next) => {
 
 exports.invalidForeignKey = (err, request, response, next) => {
     if(err.code === "23503"){
-        return response.status(400).send({status: "400", msg: "Bad request."})
+        return response.status(404).send({status: "404", msg: "Not found."})
     }else next(err);
 }
 
