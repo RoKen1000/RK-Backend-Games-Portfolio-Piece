@@ -305,7 +305,7 @@ describe("PATCH /api/reviews/:review_id", () => {
     })
 })
 
-describe.only("GET /api/reviews", () => {
+describe("GET /api/reviews", () => {
     it("200: Endpoint can accept additional queries. If 'category' is passed then endpoint should only return reviews with the corresponding category", () => {
         return request(app)
         .get("/api/reviews?category=dexterity")
