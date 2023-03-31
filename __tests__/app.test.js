@@ -346,7 +346,7 @@ describe("DELETE /api/comments/:comment_id", () => {
          })
     })
 })
-    
+})   
     
     describe("GET /api/reviews", () => {
     it("200: Endpoint can accept additional queries. If 'category' is passed then endpoint should only return reviews with the corresponding category", () => {
