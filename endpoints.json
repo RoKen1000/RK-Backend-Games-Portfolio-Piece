@@ -30,5 +30,117 @@
         }
       ]
     }
+  },
+  "GET /api/reviews/:review_id":{
+    "description": "retrieves a review based on the passed review_id",
+    "queries": [],
+    "exampleResponse": {
+      "review_id": 5,
+      "title": "Proident tempor et.",
+      "review_body": "Labore occaecat sunt qui commodo anim anim aliqua adipisicing aliquip fugiat. Ad in ipsum incididunt esse amet deserunt aliqua exercitation occaecat nostrud irure labore ipsum.  Culpa tempor non voluptate reprehenderit deserunt pariatur cupidatat aliqua adipisicing. Nostrud labore dolor fugiat sint consequat excepteur dolore irure eu. Anim ex adipisicing magna deserunt enim fugiat do nulla officia sint. Ex tempor ut aliquip exercitation eiusmod. Excepteur deserunt officia voluptate sunt aliqua esse deserunt velit.",
+      "designer": "Seymour Buttz",
+      "review_img_url": "https://images.pexels.com/photos/209728/pexels-photo-209728.jpeg?w=700&h=700",
+      "votes": 5,
+      "category": "social deduction",
+      "owner": "mallionaire",
+      "created_at": "2021-01-07 09:06:08.077"
+    }
+  },
+  "GET /api/reviews/:review_id/comments": {
+    "description": "Responds with an array of comments for the given review_id",
+    "queries": [],
+    "exampleResponse": {
+      "comments": [
+        {
+          "comment_id": 5,
+          "votes": 13,
+          "created_at": "2021-01-18T10:24:05.410Z",
+          "author": "mallionaire",
+         " body": "Now this is a story all about how, board games turned my life upside down",
+          "review_id": 2
+        },
+        {
+          "comment_id": 1,
+          "votes": 16,
+          "created_at": "2017-11-22T12:43:33.389Z",
+          "author": "bainesface",
+          "body": "I loved this game too!",
+          "review_id": 2
+        },
+        {
+          "comment_id": 4,
+          "votes": 16,
+          "created_at": "2017-11-22T12:36:03.389Z",
+          "author": "bainesface",
+          "body": "EPIC board game!",
+          "review_id": 2
+        }
+      ]
+    }
+  },
+  "POST /api/reviews/:review_id/comments": {
+    "description": "Accepts an object to post a comment to the system and returns the comment back to client on success",
+    "queries": [],
+    "exampleRequestObject": {"username": "bainesface", "body": "I am a comment to fulfill the post request."},
+    "exampleResponse": {
+      "comment": {
+        "comment_id": 7,
+        "body": "I am a comment to fulfill the post request",
+        "review_id": 10,
+        "author": "bainesface",
+        "votes": 0,
+        "created_at": "2023-03-31T13:07:29.008Z"
+      }
+    }
+  },
+  "PATCH /api/reviews/:review_id": {
+    "description": "Path allows incrementation of the vote property in the returned review_id by passing a vote increment object",
+    "queries": [],
+    "exampleRequestObject": {"inc_votes": 1},
+    "exampleResponse": {
+      "updatedReview": {
+        "review_id": 1,
+        "title": "Agricola",
+        "category": "euro game",
+        "designer": "Uwe Rosenberg",
+        "owner": "mallionaire",
+        "review_body": "Farmyard fun!",
+        "review_img_url": "https://images.pexels.com/photos/974314/pexels-photo-974314.jpeg?w=700&h=700",
+        "created_at": "2021-01-18T10:00:20.514Z",
+        "votes": 2
+      }
+    }
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description": "Endpoint can delete a comment when passed the comment's comment_id",
+    "queries": []
+  },
+  "GET /api/users": {
+    "description": "Responds with an array of objects of all users",
+    "queries": [],
+    "exampleResponse": {
+      "users": [
+        {
+          "username": "mallionaire",
+          "name": "haz",
+         "avatar_url": "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
+        },
+        {
+          "username": "philippaclaire9",
+          "name": "philippa",
+          "avatar_url": "https://avatars2.githubusercontent.com/u/24604688?s=460&v=4"
+        },
+        {
+          "username": "bainesface",
+          "name": "sarah",
+          "avatar_url": "https://avatars2.githubusercontent.com/u/24394918?s=400&v=4"
+        },
+        {
+          "username": "dav3rid",
+          "name": "dave",
+          "avatar_url": "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png"
+        }
+      ]
+    }
   }
 }

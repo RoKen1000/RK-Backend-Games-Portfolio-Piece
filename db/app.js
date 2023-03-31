@@ -4,6 +4,7 @@ const {notFound, badRequest, malformedEndpoint, internalServerError, cannotBeNul
 const {selectReview, selectAllReviews, retrieveComments, sendComment, editReviewVotes} = require("./controllers/reviews.controller")
 const {selectAllUsers} = require("./controllers/users.controller")
 const {removeComment} = require("./controllers/comments.controller")
+const {selectJson} = require("./controllers/api.controller")
 
 
 
@@ -19,6 +20,7 @@ app.post("/api/reviews/:review_id/comments", sendComment);
 app.patch("/api/reviews/:review_id", editReviewVotes);
 app.get("/api/users", selectAllUsers)
 app.delete("/api/comments/:comment_id", removeComment);
+app.get("/api", selectJson)
 app.all("/api/*", malformedEndpoint);
 
 app.use(notFound);

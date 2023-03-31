@@ -4,6 +4,7 @@ const seed = require('../db/seeds/seed')
 const testData = require('../db/data/test-data/index')
 const connection = require('../db/connection')
 const { response } = require('../db/app')
+const json = require("../endpoints.json")
 
 beforeEach(() => seed(testData));
 
@@ -336,7 +337,7 @@ describe("DELETE /api/comments/:comment_id", () => {
         .get("/api/users")
         .expect(200)
         .then((response) => {
-            const returnedUsers = response.body.users 
+            const returnedUsers = response.body.users
             expect(returnedUsers.length).toBe(4)
             returnedUsers.forEach((user) => {
                 expect(user).toHaveProperty("username")
@@ -453,5 +454,19 @@ describe("GET /api/:review_id", () => {
           })
     })
 })
+
+describe("GET /api", () => {
+    it("200: Endpoint responds with a JSON describing all available endpoints for the API", () => {
+        return request(app)
+        .get("/api")
+        .expect(200)
+        .then((response) => {
+            console.log(response.body)
+            const returnedJson = response.body
+            expect(response.body).toEqual(json)
+        })
+    })
+})
+
 
 afterAll(() => connection.end())
