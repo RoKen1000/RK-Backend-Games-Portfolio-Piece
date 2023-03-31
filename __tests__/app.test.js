@@ -394,6 +394,12 @@ describe("DELETE /api/comments/:comment_id", () => {
     it("400: Endpoint returns a bad request if the 'sort_by' parameter is something that does not exist in the table", () => {
         return request(app)
         .get("/api/reviews?sort_by=homer")
+        .expect(400)
+        .then((response) => {
+            const errorMessage = response.body
+            expect(errorMessage).toEqual({status: "400", msg: "Bad request."})
+        })
+    })
     it("400: Endpoint returns bad request when sent a comment_id that is invalidly formatted", () => {
         return request(app)
         .delete("/api/comments/bainesface")
