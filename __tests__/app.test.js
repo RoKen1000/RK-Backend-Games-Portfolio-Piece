@@ -311,7 +311,8 @@ describe("PATCH /api/reviews/:review_id", () => {
 //           .get("/api/reviews/2")
 //           .expect(200)
 //           .then((response) => {
-//             const review = response.body
+//             const review = response.body.review
+            
 //             expect(review).toHaveProperty("comment_count")
 //             expect(review.comment_count).toBe(3)
 //           })
