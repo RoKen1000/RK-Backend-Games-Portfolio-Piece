@@ -358,6 +358,16 @@ describe("GET /api/reviews", () => {
             expect(returnedReviews).toBeSortedBy("votes", {descending: false, coerce: true})
         })
     })
+    it("200: Endpoint can accept the 'order' query on its own and it will order the results based on the default 'sort_by' of created_at", () => {
+        return request(app)
+        .get("/api/reviews?order=asc")
+        .expect(200)
+        .then((response) => {
+            const returnedReviews = response.body.reviews
+            expect(returnedReviews).toBeSorted()
+            expect(returnedReviews).toBeSortedBy("created_at", {descending: false, coerce: true})
+        })
+    })
     it("400: Endpoint returns bad request if 'order' query is invalid", () => {
         return request(app)
         .get("/api/reviews?category=dexterity&order=undulating")
