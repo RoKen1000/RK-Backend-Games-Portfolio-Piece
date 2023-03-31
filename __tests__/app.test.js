@@ -320,7 +320,7 @@ describe("DELETE /api/comments/:comment_id", () => {
             expect(errorMessage).toEqual({status: "404", msg: "Not found."})
         })
     })
-    it("400: Endpoint returns bad request when sent a comment_id that is invalidly formatted", () => {
+     it("400: Endpoint returns bad request when sent a comment_id that is invalidly formatted", () => {
         return request(app)
         .delete("/api/comments/bainesface")
         .expect(400)
@@ -329,9 +329,8 @@ describe("DELETE /api/comments/:comment_id", () => {
             expect(errorMessage).toEqual({status: "400", msg: "Bad request."})
         })
     })
-})
-
-describe("GET /api/users", () => {
+    
+    describe("GET /api/users", () => {
     it("200: Endpoint responds with an array of objects of all users with the required properties", () => {
         return request(app)
         .get("/api/users")
@@ -347,4 +346,93 @@ describe("GET /api/users", () => {
          })
     })
 })
+    
+    
+    describe("GET /api/reviews", () => {
+    it("200: Endpoint can accept additional queries. If 'category' is passed then endpoint should only return reviews with the corresponding category", () => {
+        return request(app)
+        .get("/api/reviews?category=dexterity")
+        .expect(200)
+        .then((response) => {
+            const returnedReview = response.body.reviews
+            expect(returnedReview.length).toBe(1)
+            returnedReview.forEach((review) => {
+                expect(review.category).toBe("dexterity")
+                expect(review.category).not.toBe("euro game")
+                expect(review.category).not.toBe("social deduction")
+            })
+        })
+    })
+    it("200: When a valid category is passed in the query and there are no reviews, the endpoint returns an ok status code", () => {
+        return request(app)
+        .get("/api/reviews?category=children's games")
+        .expect(200)
+        .then((response) => {
+            const returnedReview = response.body.reviews
+            expect(returnedReview.length).toBe(0)
+        })
+    })
+    it("404: When passed a 'category' query that does not exist, endpoint returns a not found error", () => {
+        return request(app)
+        .get("/api/reviews?category=homer")
+        .expect(404)
+        .then((response) => {
+            const errorMessage = response.body
+            expect(errorMessage).toEqual({status: "404", msg: "Not found."})
+        })
+    })
+    it("200: Endpoint can accept a 'sort_by' query which returns the reviews sorted by the column requested", () => {
+        return request(app)
+        .get("/api/reviews?sort_by=votes")
+        .expect(200)
+        .then((response) => {
+            const returnedReviews = response.body.reviews
+            expect(returnedReviews).toBeSorted()
+            expect(returnedReviews).toBeSortedBy("votes", {descending: true, coerce: true})
+        })
+    })
+    it("400: Endpoint returns a bad request if the 'sort_by' parameter is something that does not exist in the table", () => {
+        return request(app)
+        .get("/api/reviews?sort_by=homer")
+    it("400: Endpoint returns bad request when sent a comment_id that is invalidly formatted", () => {
+        return request(app)
+        .delete("/api/comments/bainesface")
+        .expect(400)
+        .then((response) => {
+            const errorMessage = response.body
+            expect(errorMessage).toEqual({status: "400", msg: "Bad request."})
+        })
+    })
+    it("200: Endpoint accepts an 'order' query to which allows results to be sorted ascending or descending based on the request", () => {
+        return request(app)
+        .get("/api/reviews?sort_by=votes&order=asc")
+        .expect(200)
+        .then((response) => {
+            const returnedReviews = response.body.reviews
+            expect(returnedReviews).toBeSorted()
+            expect(returnedReviews).toBeSortedBy("votes", {descending: false, coerce: true})
+        })
+    })
+    it("200: Endpoint can accept the 'order' query on its own and it will order the results based on the default 'sort_by' of created_at", () => {
+        return request(app)
+        .get("/api/reviews?order=asc")
+        .expect(200)
+        .then((response) => {
+            const returnedReviews = response.body.reviews
+            expect(returnedReviews).toBeSorted()
+            expect(returnedReviews).toBeSortedBy("created_at", {descending: false, coerce: true})
+        })
+    })
+    it("400: Endpoint returns bad request if 'order' query is invalid", () => {
+        return request(app)
+        .get("/api/reviews?category=dexterity&order=undulating")
+        .expect(400)
+        .then((response) => {
+            const errorMessage = response.body
+            expect(errorMessage).toEqual({status: "400", msg: "Bad request."})
+        })
+    })
+})
+})
+
 afterAll(() => connection.end())
