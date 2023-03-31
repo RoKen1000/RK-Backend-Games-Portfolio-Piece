@@ -305,7 +305,7 @@ describe("PATCH /api/reviews/:review_id", () => {
     })
 })
 
-describe.only("GET /api/users", () => {
+describe("GET /api/users", () => {
     it("200: Endpoint responds with an array of objects of all users with the required properties", () => {
         return request(app)
         .get("/api/users")
