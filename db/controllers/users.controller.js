@@ -7,4 +7,7 @@ exports.selectAllUsers = (request, response, next) => {
     .then((retrievedUsers) => {
         return response.status(200).send({users: retrievedUsers})
     })
+    .catch((err) => {
+        next(err)
+    })
 }
