@@ -441,4 +441,25 @@ describe("DELETE /api/comments/:comment_id", () => {
 })
 })
 
+// describe("GET /api", () => {
+//     it("200: Endpoint responds with a JSON describing all available endpoints for the API", () => {
+//         return request(app)
+//         .get("/api")
+//         .expect(200)
+//         .then((response => {
+//             const returnedJson = response.body.json
+//             expect(returnedJson).toHaveProperty("GET /api x")
+//             expect(returnedJson).toHaveProperty("GET /api/categories x")
+//             expect(returnedJson).toHaveProperty("GET /api/reviews/:review_id")
+//             expect(returnedJson).toHaveProperty("GET /api/reviews x")
+//             expect(returnedJson).toHaveProperty("GET /api/reviews/:review_id/comments")
+//             expect(returnedJson).toHaveProperty("POST /api/reviews/:review_id/comments")
+//             expect(returnedJson).toHaveProperty("PATCH /api/reviews/:review_id")
+//             expect(returnedJson).toHaveProperty("DELETE /api/comments/:comment_id")
+//             expect(returnedJson).toHaveProperty("GET /api/users")
+//         }))
+//     })
+// })
+
+
 afterAll(() => connection.end())
