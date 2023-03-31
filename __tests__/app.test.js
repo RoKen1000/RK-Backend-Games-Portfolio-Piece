@@ -4,6 +4,7 @@ const seed = require('../db/seeds/seed')
 const testData = require('../db/data/test-data/index')
 const connection = require('../db/connection')
 const { response } = require('../db/app')
+const json = require("../endpoints.json")
 
 beforeEach(() => seed(testData));
 
@@ -336,7 +337,7 @@ describe("DELETE /api/comments/:comment_id", () => {
         .get("/api/users")
         .expect(200)
         .then((response) => {
-            const returnedUsers = response.body.users 
+            const returnedUsers = response.body.users
             expect(returnedUsers.length).toBe(4)
             returnedUsers.forEach((user) => {
                 expect(user).toHaveProperty("username")
@@ -441,25 +442,27 @@ describe("DELETE /api/comments/:comment_id", () => {
 })
 })
 
-// describe("GET /api", () => {
-//     it("200: Endpoint responds with a JSON describing all available endpoints for the API", () => {
-//         return request(app)
-//         .get("/api")
-//         .expect(200)
-//         .then((response => {
-//             const returnedJson = response.body.json
-//             expect(returnedJson).toHaveProperty("GET /api x")
-//             expect(returnedJson).toHaveProperty("GET /api/categories x")
-//             expect(returnedJson).toHaveProperty("GET /api/reviews/:review_id")
-//             expect(returnedJson).toHaveProperty("GET /api/reviews x")
-//             expect(returnedJson).toHaveProperty("GET /api/reviews/:review_id/comments")
-//             expect(returnedJson).toHaveProperty("POST /api/reviews/:review_id/comments")
-//             expect(returnedJson).toHaveProperty("PATCH /api/reviews/:review_id")
-//             expect(returnedJson).toHaveProperty("DELETE /api/comments/:comment_id")
-//             expect(returnedJson).toHaveProperty("GET /api/users")
-//         }))
-//     })
-// })
+describe("GET /api", () => {
+    it("200: Endpoint responds with a JSON describing all available endpoints for the API", () => {
+        return request(app)
+        .get("/api")
+        .expect(200)
+        .then((response) => {
+            console.log(response.body)
+            const returnedJson = response.body
+            expect(returnedJson).toHaveProperty("GET /api")
+            expect(returnedJson).toHaveProperty("GET /api/categories")
+            expect(returnedJson).toHaveProperty("GET /api/reviews/:review_id")
+            expect(returnedJson).toHaveProperty("GET /api/reviews")
+            expect(returnedJson).toHaveProperty("GET /api/reviews/:review_id/comments")
+            expect(returnedJson).toHaveProperty("POST /api/reviews/:review_id/comments")
+            expect(returnedJson).toHaveProperty("PATCH /api/reviews/:review_id")
+            expect(returnedJson).toHaveProperty("DELETE /api/comments/:comment_id")
+            expect(returnedJson).toHaveProperty("GET /api/users")
+            expect(response.body).toEqual(json)
+        })
+    })
+})
 
 
 afterAll(() => connection.end())

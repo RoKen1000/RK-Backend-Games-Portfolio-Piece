@@ -1,4 +1,3 @@
-const { query } = require("../connection");
 const db = require("../connection");
 const categories = require("../data/test-data/categories");
 const reviews = require("../data/test-data/reviews");
