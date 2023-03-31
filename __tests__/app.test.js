@@ -439,6 +439,19 @@ describe("DELETE /api/comments/:comment_id", () => {
         })
     })
 })
+
+
+describe("GET /api/:review_id", () => {
+    it("200: The review returned from the endpoint should also contain a 'comment_count' property showing the total number of comments for the review", () => {
+        return request(app)
+          .get("/api/reviews/2")
+          .expect(200)
+          .then((response) => {
+            const review = response.body.review
+            expect(review).toHaveProperty("comment_count")
+            expect(review.comment_count).toBe(3)
+          })
+    })
 })
 
 afterAll(() => connection.end())

@@ -4,7 +4,7 @@ const categories = require("../data/test-data/categories");
 const reviews = require("../data/test-data/reviews");
 
 exports.fetchReview = (requestQuery) => {
-    return db.query('SELECT * FROM reviews WHERE review_id=$1;', [requestQuery])
+    return db.query('SELECT owner, title, reviews.review_id, review_body, category, review_img_url, reviews.created_at, reviews.votes, designer, owner, CAST(COUNT(comments.review_id) AS INT) AS comment_count FROM reviews LEFT JOIN comments ON comments.review_id = reviews.review_id WHERE reviews.review_id = $1 GROUP BY reviews.review_id;', [requestQuery])
     .then((review) => {
         if(review.rows.length === 0){
             return Promise.reject({status: "404", msg: "Not found."})
