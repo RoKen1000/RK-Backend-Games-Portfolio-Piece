@@ -331,4 +331,20 @@ describe("DELETE /api/comments/:comment_id", () => {
     })
 })
 
+describe("GET /api/users", () => {
+    it("200: Endpoint responds with an array of objects of all users with the required properties", () => {
+        return request(app)
+        .get("/api/users")
+        .expect(200)
+        .then((response) => {
+            const returnedUsers = response.body.users 
+            expect(returnedUsers.length).toBe(4)
+            returnedUsers.forEach((user) => {
+                expect(user).toHaveProperty("username")
+                expect(user).toHaveProperty("name")
+                expect(user).toHaveProperty("avatar_url")
+              }) 
+         })
+    })
+})
 afterAll(() => connection.end())
