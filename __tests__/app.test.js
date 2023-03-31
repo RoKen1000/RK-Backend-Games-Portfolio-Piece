@@ -450,15 +450,6 @@ describe("GET /api", () => {
         .then((response) => {
             console.log(response.body)
             const returnedJson = response.body
-            expect(returnedJson).toHaveProperty("GET /api")
-            expect(returnedJson).toHaveProperty("GET /api/categories")
-            expect(returnedJson).toHaveProperty("GET /api/reviews/:review_id")
-            expect(returnedJson).toHaveProperty("GET /api/reviews")
-            expect(returnedJson).toHaveProperty("GET /api/reviews/:review_id/comments")
-            expect(returnedJson).toHaveProperty("POST /api/reviews/:review_id/comments")
-            expect(returnedJson).toHaveProperty("PATCH /api/reviews/:review_id")
-            expect(returnedJson).toHaveProperty("DELETE /api/comments/:comment_id")
-            expect(returnedJson).toHaveProperty("GET /api/users")
             expect(response.body).toEqual(json)
         })
     })
