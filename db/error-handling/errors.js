@@ -6,13 +6,13 @@ exports.malformedEndpoint = (request, response, next) => {
 }
 
 exports.notFound = (err, request, response, next) => {
-    if(!err.code){
+    if(!err.code && err.status !== "400"){
         return response.status(404).send({status: "404", msg: "Not found."})
     } else next(err);
 }
 
 exports.badRequest = (err, request, response, next) => {
-    if(err.code === "22P02"){
+    if(err.code === "22P02" || err.status === "400"){
         return response.status(400).send({status: "400", msg: "Bad request."})
     }else next(err);
 }

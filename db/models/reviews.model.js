@@ -1,17 +1,61 @@
-const db = require("../connection")
+const { query } = require("../connection");
+const db = require("../connection");
+const categories = require("../data/test-data/categories");
+const reviews = require("../data/test-data/reviews");
 
 exports.fetchReview = (requestQuery) => {
     return db.query('SELECT owner, title, reviews.review_id, review_body, category, review_img_url, reviews.created_at, reviews.votes, designer, owner, CAST(COUNT(comments.review_id) AS INT) AS comment_count FROM reviews LEFT JOIN comments ON comments.review_id = reviews.review_id WHERE reviews.review_id = $1 GROUP BY reviews.review_id;', [requestQuery])
     .then((review) => {
         if(review.rows.length === 0){
-            return Promise.reject({status: "400", msg: "Bad request."})
+            return Promise.reject({status: "404", msg: "Not found."})
         }
         return {review: review.rows[0]};
     })
 }
 
-exports.fetchAllReviews = () => {
-    return db.query('SELECT owner, title, reviews.review_id, category, review_img_url, reviews.created_at, reviews.votes, designer, COUNT(comments.review_id) AS comment_count FROM reviews LEFT JOIN comments ON reviews.review_id = comments.review_id GROUP BY reviews.review_id ORDER BY reviews.created_at DESC;')
+exports.fetchAllReviews = (requestQuery) => {
+    
+    return db.query('SELECT slug FROM categories;')
+
+    .then((categories) => {
+
+        const returnedCategories = categories.rows.map((category) => {
+            return category.slug
+        })
+        
+        const categoryArray = []
+        let order = "desc"
+        let sortBy = "created_at"
+
+        let queryString = `SELECT owner, title, reviews.review_id, category, review_img_url, reviews.created_at, reviews.votes, designer, COUNT(comments.review_id) AS comment_count FROM reviews LEFT JOIN comments ON reviews.review_id = comments.review_id`
+
+        if(requestQuery.order){
+            if(!["asc", "desc"].includes(requestQuery.order)){
+                return Promise.reject({status: "400", msg: "Bad request."})
+            }
+            order = requestQuery.order
+        }
+
+        if(requestQuery.sort_by){
+            if(!["owner", "title", "review_id", "category", "review_img_url", "created_at", "votes", "designer", "review_id"].includes(requestQuery.sort_by)){
+                return Promise.reject({status: "400", msg: "Bad request."})
+            }
+            sortBy = requestQuery.sort_by
+        }
+
+        if(requestQuery.category){
+
+            if(!returnedCategories.includes(requestQuery.category)){
+                return Promise.reject({status: "404", msg: "Not found."})
+            }
+            queryString += ` WHERE reviews.category = $1`
+            categoryArray.push(requestQuery.category)
+        }
+
+        queryString += ` GROUP BY reviews.review_id ORDER BY ${sortBy} ${order};`
+        
+        return db.query(queryString, categoryArray) 
+    })
     .then((reviews) => {
         return reviews.rows
     })
