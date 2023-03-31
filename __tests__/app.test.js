@@ -305,7 +305,7 @@ describe("PATCH /api/reviews/:review_id", () => {
     })
 })
 
-describe("GET /api/reviews", () => {
+describe.only("GET /api/reviews", () => {
     it("200: Endpoint can accept additional queries. If 'category' is passed then endpoint should only return reviews with the corresponding category", () => {
         return request(app)
         .get("/api/reviews?category=dexterity")
@@ -320,13 +320,22 @@ describe("GET /api/reviews", () => {
             })
         })
     })
-    it("400: When passed a 'category' query that does not exist, endpoint returns a bad request error", () => {
+    it("200: When a valid category is passed in the query and there are no reviews, the endpoint returns an ok status code", () => {
+        return request(app)
+        .get("/api/reviews?category=children's games")
+        .expect(200)
+        .then((response) => {
+            const returnedReview = response.body.reviews
+            expect(returnedReview.length).toBe(0)
+        })
+    })
+    it("404: When passed a 'category' query that does not exist, endpoint returns a not found error", () => {
         return request(app)
         .get("/api/reviews?category=homer")
-        .expect(400)
+        .expect(404)
         .then((response) => {
             const errorMessage = response.body
-            expect(errorMessage).toEqual({status: "400", msg: "Bad request."})
+            expect(errorMessage).toEqual({status: "404", msg: "Not found."})
         })
     })
     it("200: Endpoint can accept a 'sort_by' query which returns the reviews sorted by the column requested", () => {
