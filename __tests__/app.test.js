@@ -305,6 +305,32 @@ describe("PATCH /api/reviews/:review_id", () => {
     })
 })
 
+describe("DELETE /api/comments/:comment_id", () => {
+    it("204: Endpoint can delete a comment when passed the comment's comment_id", () => {
+        return request(app)
+        .delete("/api/comments/1")
+        .expect(204)
+    })
+    it("404: Endpoint returns a not found error if the comment_id does not exist", () => {
+        return request(app)
+        .delete("/api/comments/9999")
+        .expect(404)
+        .then((response) => {
+            const errorMessage = response.body
+            expect(errorMessage).toEqual({status: "404", msg: "Not found."})
+        })
+    })
+    it("400: Endpoint returns bad request when sent a comment_id that is invalidly formatted", () => {
+        return request(app)
+        .delete("/api/comments/bainesface")
+        .expect(400)
+        .then((response) => {
+            const errorMessage = response.body
+            expect(errorMessage).toEqual({status: "400", msg: "Bad request."})
+        })
+    })
+})
+
 describe("GET /api/users", () => {
     it("200: Endpoint responds with an array of objects of all users with the required properties", () => {
         return request(app)
@@ -317,9 +343,8 @@ describe("GET /api/users", () => {
                 expect(user).toHaveProperty("username")
                 expect(user).toHaveProperty("name")
                 expect(user).toHaveProperty("avatar_url")
-            })
-        })
+              }) 
+         })
     })
 })
-
 afterAll(() => connection.end())
