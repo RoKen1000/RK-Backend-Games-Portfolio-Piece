@@ -456,7 +456,7 @@ describe("GET /api/:review_id", () => {
 })
 
 describe("GET /api", () => {
-    it.only("200: Endpoint responds with a JSON describing all available endpoints for the API", () => {
+    it("200: Endpoint responds with a JSON describing all available endpoints for the API", () => {
         return request(app)
         .get("/api")
         .expect(200)
