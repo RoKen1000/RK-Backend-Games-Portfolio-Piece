@@ -5,11 +5,13 @@ const {selectReview, selectAllReviews, retrieveComments, sendComment, editReview
 const {selectAllUsers} = require("./controllers/users.controller")
 const {removeComment} = require("./controllers/comments.controller")
 const {selectJson} = require("./controllers/api.controller")
+const cors = require("cors")
 
 
 
 const app = express();
 
+app.use(cors())
 app.use(express.json())
 
 app.get("/api/categories", selectAllCategories);
