@@ -349,7 +349,7 @@ describe("DELETE /api/comments/:comment_id", () => {
 })
 })   
     
-    describe("GET /api/reviews", () => {
+describe("GET /api/reviews", () => {
     it("200: Endpoint can accept additional queries. If 'category' is passed then endpoint should only return reviews with the corresponding category", () => {
         return request(app)
         .get("/api/reviews?category=dexterity")
@@ -395,15 +395,6 @@ describe("DELETE /api/comments/:comment_id", () => {
     it("400: Endpoint returns a bad request if the 'sort_by' parameter is something that does not exist in the table", () => {
         return request(app)
         .get("/api/reviews?sort_by=homer")
-        .expect(400)
-        .then((response) => {
-            const errorMessage = response.body
-            expect(errorMessage).toEqual({status: "400", msg: "Bad request."})
-        })
-    })
-    it("400: Endpoint returns bad request when sent a comment_id that is invalidly formatted", () => {
-        return request(app)
-        .delete("/api/comments/bainesface")
         .expect(400)
         .then((response) => {
             const errorMessage = response.body

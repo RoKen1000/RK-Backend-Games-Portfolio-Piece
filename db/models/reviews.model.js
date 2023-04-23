@@ -36,7 +36,7 @@ exports.fetchAllReviews = (requestQuery) => {
         }
 
         if(requestQuery.sort_by){
-            if(!["owner", "title", "review_id", "category", "review_img_url", "created_at", "votes", "designer", "review_id"].includes(requestQuery.sort_by)){
+            if(!["owner", "title", "review_id", "category", "review_img_url", "created_at", "votes", "designer", "review_id", "comment_count"].includes(requestQuery.sort_by)){
                 return Promise.reject({status: "400", msg: "Bad request."})
             }
             sortBy = requestQuery.sort_by
