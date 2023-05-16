@@ -40,4 +40,4 @@ In order to connect to the two databses used in this repo, developers must add t
 
 <a href="https://nc-games-service.onrender.com/api">The hosted version of this project can be found here.</a>
 
-Please note that the hosting service can be slow to load. 
+Please note that the hosting service may be slow to load. 
